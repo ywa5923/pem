@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Citation{% endblock %}
+
+{% block pageTitle %}
+   Citation page
+    <a href="{{ path('citation_index') }}">back to list</a> |
+    <a href="{{ path('citation_edit', {'id': citation.id}) }}">edit</a> |
+
+    Created at: {{ citation.createdAt|date('Y-m-d')}} |
+    Updated at: {{ citation.updatedAt|date('Y-m-d') }}
+{% endblock %}
+
+{% block body %}
+
+    <table class="table table-striped table-hover table-sm table-responsive-md">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ citation.id }}</td>
+            </tr>
+            <tr>
+                <th>User</th>
+                <td> {{ citation.user.firstName~' '~ citation.user.middleName~' '~citation.user.lastName }}</td>
+            </tr>
+            <tr>
+                <th>Year</th>
+                <td>{{ citation.year ? citation.year|date('Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>WosCitations</th>
+                <td>{{ citation.wosCitations }}</td>
+            </tr>
+            <tr>
+                <th>PrintScreenUrl</th>
+                <td>{{ citation.printScreenUrl }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

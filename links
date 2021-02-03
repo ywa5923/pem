@@ -1,0 +1,21 @@
+git pull --rebase origin master: https://www.atlassian.com/git/tutorials/comparing-workflows
+-remove files from commit history (evaluare2019): git filter-branch --index-filter 'git rm --cached --ignore-umatch evaluare2019' HEAD
+
+//====Disable to start on boot
+//sudo systemctl disable docker
+sudo systemctl disable apache2
+sudo systemctl disable mysql
+
+
+//https://developer.okta.com/blog/2018/06/14/php-crud-app-symfony-vue
+
+(NATIONAL INSTITUTE OF MATERIALS PHYSICS) OR (NATL INST MAT PHYS) OR (NATL INST PHYS MAT) OR (NATL INST MAT) OR (NATL INST MAT PHYSICS) OR (NACL INST MAT PHYS) OR (NATL INST MAT PHYS BUCHAREST) OR (INFM NATL INST MAT PHYS) OR (INST MAT PHYS) OR (INCDFM) OR (NIMP) OR (INST FIZ TEHNOL MAT) OR (NATL INST MAT PHYS INCDFM) OR (NATL INST R D MAT PHYS) OR (R D NATL INST MAT PHYS) OR (NATL INST MAT PHYS BUCHAREST MAGURELE) OR (Natl Inst R&D Mat Phys) OR (Inst Natl Pentru Fiz Mat)
+
+https://www.youtube.com/watch?v=tAo9vMyUXwQ&index=11&list=RDMMSmXa0kQUoFI
+
+
+https://dunglas.fr/2018/10/http-2-speed-up-your-apps-and-dispatch-real-time-updates-symfony-and-api-platforms-features-announcement/
+
+File uploading:https://www.youtube.com/watch?v=zTv0UFkAKFA
+Ajax File Uploading:https://blog.eleven-labs.com/en/upload-file-ajax/
+php template engine: http://platesphp.com/

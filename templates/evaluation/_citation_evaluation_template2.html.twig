@@ -1,0 +1,36 @@
+<table class="table table-striped table-hover table-sm table-responsive-md">
+    <tr>
+        <th colspan="10">
+            <h4>Sectiunea A3: Articole care au citari - Total citari:{{ articles.totalPoints }}&nbsp;Punctaj:{{articles.totalPoints/20|number_format(2) }}</h4>
+        </th>
+    </tr>
+    <tr>
+        <th>Nr:</th>
+        <th>Titlu articol</th>
+        <th>Autori</th>
+        <th>Jurnal</th>
+        <th>Total citari</th>
+        <th>Citari</th>
+    </tr>
+
+    {% for article in articles.items %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ article.title }}</td>
+            <td>{{ article.authors }}</td>
+            <td>{{ article.journal }} <b>{{ article.publicationDate|date('Y') }}</b></td>
+            <td><span class="badge badge-success">{{ article.citations|length }}</span></td>
+            <td>
+                {% for citation in article.citations %}
+                    <p><b>({{loop.index}})</b>&nbsp;<i>{{  citation.title }}</i>
+                   {{ citation.authors }}&nbsp;
+                   {{ citation.journal }} <b>({{ citation.publicationDate|date('Y') }})</b>
+                    <hr>
+
+                {% endfor %}
+
+            </td>
+
+        </tr>
+    {% endfor %}
+</table>

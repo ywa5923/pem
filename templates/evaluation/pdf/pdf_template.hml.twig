@@ -1,0 +1,52 @@
+
+<!doctype html>
+<html lang="en">
+
+<body>
+{% set totalScore=(evaluation.patents.totalPoints+
+    evaluation.books.totalPoints+
+    evaluation.projects.totalPoints+
+    evaluation.articles.totalPoints+
+    evaluation.articlesWithCitations.totalPoints/20+
+    evaluation.activities.totalPoints)|number_format(3)
+%}
+{% set normalizedFactor= evaluation.factor.value|number_format(2)%}
+{% set totalNormalizedScore=(totalScore* normalizedFactor)|number_format(2)%}
+
+<div>
+ <h3>&nbsp;&nbsp;{{ user_full_name }}</h3>
+ <h3>  Factor normare: {{ normalizedFactor }}</h3>
+ <h3>  Total: {{totalScore }}*{{ normalizedFactor }} =
+      {{ totalNormalizedScore }} puncte</h3>
+</div>
+
+
+<div class="row">
+
+      {% include 'evaluation/pdf/_pdf_patent_evaluation_template.html.twig' with {patents:evaluation.patents} %}
+     <br>
+     <br>
+
+     {% include 'evaluation/pdf/_pdf_book_evaluation_template.html.twig' with {books:evaluation.books} %}
+     <br>
+     <br>
+
+     {% include 'evaluation/pdf/_pdf_project_evaluation_template.html.twig' with {projects:evaluation.projects} %}
+     <br>
+     <br>
+
+     {% include 'evaluation/pdf/_pdf_article_evaluation_template.html.twig' with {articles:evaluation.articles} %}
+     <br>
+     <br>
+
+     {% include 'evaluation/pdf/_pdf_activity_evaluation_template.html.twig' with {activities:evaluation.activities} %}
+     <br>
+     <br>
+
+     {% include 'evaluation/pdf/_pdf_citation_evaluation_template2.html.twig' with {articles:evaluation.articlesWithCitations} %}
+     <br>
+     <br>
+
+</div>
+</body>
+</html>

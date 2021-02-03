@@ -1,0 +1,34 @@
+<table class="table table-striped table-hover table-sm table-responsive-md">
+    <tr>
+        <th colspan="10">
+            <h4>Sectiunea A2: Articole stiintifice - {{ articles.totalPoints|number_format(2) }} puncte</h4>
+        </th>
+    </tr>
+    <tr>
+        <th>Nr:</th>
+        <th>Titlu articol</th>
+        <th>Autori</th>
+        <th>Neff</th>
+        <th>Jurnal,volum,pagini,anul,doi</th>
+        <th>AIS</th>
+        <th>Corectie pentru autorul corespondent din institut</th>
+        <th>Contributie la I</th>
+        <th>Contributie la P</th>
+        <th>Total*0.5</th>
+    </tr>
+
+    {% for article in articles.items %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ article.title }}</td>
+            <td>{{ article.authors }}</td>
+            <td>{{ article.neff|number_format(2) }}</td>
+            <td>{{ article.journal }}</td>
+            <td>{{ article.AIS }}</td>
+            <td>{{ article.correction }}</td>
+            <td>{{ article.i|number_format(2)}}</td>
+            <td>{{ article.p|number_format(2) }}</td>
+            <td>{{ article.total|number_format(2) }}</td>
+        </tr>
+    {% endfor %}
+</table>

@@ -1,0 +1,16 @@
+<table class="table table-striped table-hover table-sm table-responsive-md">
+
+    <tr>
+        <th colspan="2">
+            <h4>Sectiunea A3: Citari - {{ citations.totalPoints|number_format(2) }} puncte</h4>
+        </th>
+    </tr>
+    <tr>
+        <th>Total citari la articolele  din ultimii 5 ani</th>
+        <th>Punctaj</th>
+    </tr>
+    <tr>
+        <td>{{ citations.citations }}</td>
+        <td>{{ citations.totalPoints }}</td>
+    </tr>
+</table>

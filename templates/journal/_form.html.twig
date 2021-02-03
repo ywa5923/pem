@@ -1,0 +1,56 @@
+{#{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-primary btn-lg btn-block">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}#}
+
+{% import _self as formMacros %}
+
+{% macro printJournalFactorRow(journalFactorForm) %}
+    <div class="js-collection-item">
+        <a href="#" class="js-collection-item-remove pull-right">
+            <i class="far fa-minus-square"></i>
+            remove factors
+        </a>
+        {{ form_errors(journalFactorForm) }}
+        {{ form_row(journalFactorForm.year) }}
+        {{ form_row(journalFactorForm.AIS) }}
+        {{ form_row(journalFactorForm.impactFactor) }}
+    </div>
+{% endmacro %}
+
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
+<div class="row">
+    <div class="col-md-6">
+
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.abbreviatedName) }}
+
+    </div>
+    <div class="col-md-6">
+        <div class="js-collection-wrapper"
+             data-prototype="{{ formMacros.printJournalFactorRow(form.journalFactors.vars.prototype)|e('html_attr') }}"
+             data-index="{{ form.journalFactors|length }}">
+
+            {% for journal in form.journalFactors %}
+                {{ formMacros.printJournalFactorRow(journal) }}
+            {% endfor %}
+
+        </div>
+        <div class="buttons">
+            <a href="#" class="js-collection-item-add" data-wrapper="js-collection-wrapper">
+                <span class="fa fa-plus-circle"></span>
+                add journal factor
+            </a>
+            {# prevents weird label from showing up in new #}
+            {{ form_widget(form.journalFactors ) }}
+            <button class="btn btn-primary btn-lg btn-block">{{ button_label|default('Save') }}</button>
+
+        </div>
+    </div>
+</div>
+{{ form_end(form) }}
+
+
+
+

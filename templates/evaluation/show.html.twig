@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+
+
+{% block pageTitle %}
+     {{ user_full_name }}
+{% endblock %}
+ {% block btnGroup %}
+     <div class="dropdown">
+         <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+             Select year
+         </button>
+         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+             <a class="dropdown-item select-evaluation" data-evaluationuri="
+{{ path(app.request.attributes.get('_route'),
+                 app.request.attributes.get('_route_params')) }}" >2019</a>
+
+             <a class="dropdown-item select-evaluation" data-evaluationuri="
+{{ path(app.request.attributes.get('_route'),
+                 app.request.attributes.get('_route_params')) }}" >2020</a>
+             <a class="dropdown-item select-evaluation" data-evaluationuri="
+{{ path(app.request.attributes.get('_route'),
+                 app.request.attributes.get('_route_params')) }}" >2021</a>
+         </div>
+
+     </div>
+     {% if evaluation.year is defined %}
+     <a href="{{ path('download-evaluation',{id:user_id,year:evaluation.year,action:'download_pdf'}) }}"
+        class="btn btn-primary  active ml-2"
+        role="button"
+        aria-pressed="true"
+     >
+         Download pdf
+
+     </a>
+         <a href="{{ path('download-evaluation',{id:user_id,year:evaluation.year,action:'send_email'}) }}"
+            class="btn btn-primary  active ml-2"
+            role="button"
+            target="_blank"
+            aria-pressed="true"
+         >
+             Send Email
+
+         </a>
+     {% endif %}
+
+
+ {% endblock %}
+
+{% block body %}
+{% if evaluation.year is not defined %}
+    <h1>Select the evaluation year</h1>
+{% else %}
+    {% set totalScore=(evaluation.patents.totalPoints+
+        evaluation.books.totalPoints+
+        evaluation.projects.totalPoints+
+        evaluation.articles.totalPoints+
+        evaluation.articlesWithCitations.totalPoints/20+
+        evaluation.activities.totalPoints)|number_format(2)
+    %}
+    {% set totalNormalizedScore=totalScore*evaluation.factor.value %}
+    <div class="row btn-info text-uppercase p-2 my-2">
+        <h3>{{ user_full_name }} /</h3>
+        <h3>  Factor normare: {{ evaluation.factor.value|number_format(2) }}</h3>
+        <h3> Total score {{ evaluation.year }}: {{totalScore }}*{{ evaluation.factor.value|number_format(2) }}
+            = {{ totalNormalizedScore|number_format(2) }}
+        </h3>
+    </div>
+    <div class="row">
+      {% include 'evaluation/_patent_evaluation_template.html.twig' with {patents:evaluation.patents} %}
+
+      {% include 'evaluation/_book_evaluation_template.html.twig' with {books:evaluation.books} %}
+
+      {% include 'evaluation/_project_evaluation_template.html.twig' with {projects:evaluation.projects} %}
+
+      {% include 'evaluation/_article_evaluation_template.html.twig' with {articles:evaluation.articles} %}
+
+      {% include 'evaluation/_citation_evaluation_template2.html.twig' with {articles:evaluation.articlesWithCitations} %}
+
+      {% include 'evaluation/_activity_evaluation_template.html.twig' with {activities:evaluation.activities} %}
+
+    </div>
+ {% endif %}
+
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('assets/js/evaluation.js') }}"></script>
+{% endblock %}

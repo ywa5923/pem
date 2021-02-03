@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}WorkInterruption{% endblock %}
+{% block pageTitle %}
+View work interruption |
+<a href="{{ path('work_interruption_index') }}">back to list</a> |
+<a href="{{ path('work_interruption_edit', {'id': work_interruption.id}) }}">edit</a> |
+
+Created at: {{ work_interruption.createdAt|date('Y-m-d')}} |
+Updated at: {{ work_interruption.updatedAt|date('Y-m-d') }}
+{% endblock %}
+{% block body %}
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ work_interruption.id }}</td>
+            </tr>
+            <tr>
+                <th>BeginDate</th>
+                <td>{{ work_interruption.beginDate ? work_interruption.beginDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>EndDate</th>
+                <td>{{ work_interruption.endDate ? work_interruption.endDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {{ include('work_interruption/_delete_form.html.twig') }}
+{% endblock %}

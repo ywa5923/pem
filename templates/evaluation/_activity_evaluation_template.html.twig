@@ -1,0 +1,25 @@
+<table class="table table-striped table-hover table-sm table-responsive-md">
+
+    <tr>
+        <th colspan="5">
+            <h4>Sectiunea A4: Activitati - {{ activities.totalPoints|number_format(2) }} puncte</h4>
+        </th>
+    </tr>
+    <tr>
+        <th>Nr:</th>
+        <th>Titlu</th>
+        <th>Tipul Activitatii</th>
+        <th>Anul</th>
+        <th>Punctaj</th>
+    </tr>
+
+    {% for activity in activities.items %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ activity.title }}</td>
+            <td>{{ activity.type }}</td>
+            <td>{{ activity.year|date('Y')  }}</td>
+            <td>{{ activity.total|number_format(2) }}</td>
+        </tr>
+    {% endfor %}
+</table>

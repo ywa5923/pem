@@ -1,0 +1,25 @@
+<table style="width:100%;color:#2b5e92;background-color: #F2F1F1;text-align:center" cellspacing="2" cellpadding="1">
+
+    <tr style="background-color:#2b5e92;color:white;">
+        <th colspan="4">
+            <h4>Sectiunea A4: Activitati - {{ activities.totalPoints|number_format(2) }} puncte</h4>
+        </th>
+    </tr>
+    <tr style="background-color:#FEC643;">
+        <th style="width:4%">Nr:</th>
+        <th style="width:50%">Titlu</th>
+        <th style="width:10%">Tipul Activitatii</th>
+        <th style="width:16%">Anul</th>
+        <th style="width:20%">Punctaj</th>
+    </tr>
+
+    {% for activity in activities.items %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ activity.title }}</td>
+            <td>{{ activity.type }}</td>
+            <td>{{ activity.year|date('Y')  }}</td>
+            <td>{{ activity.total|number_format(3) }}</td>
+        </tr>
+    {% endfor %}
+</table>

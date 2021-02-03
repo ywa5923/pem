@@ -1,0 +1,90 @@
+{% import _self as formMacros %}
+
+{% macro printUserIdentificatorRow(WosIdetificatorForm) %}
+    <div class="js-collection-item">
+        <a href="#" class="js-collection-item-remove pull-right">
+            <i class="far fa-trash-alt"></i>remove identificator
+        </a>
+        {{ form_errors(WosIdetificatorForm) }}
+        {{ form_row(WosIdetificatorForm.type) }}
+        {{ form_row(WosIdetificatorForm.identificator) }}
+
+    </div>
+{% endmacro %}
+
+{% macro printScientificTitleRow(scientificTitleForm) %}
+    <div class="js-collection-item">
+        <a href="#" class="js-collection-item-remove pull-right">
+            <i class="far fa-trash-alt"></i> remove scientific title
+        </a>
+        {{ form_errors(scientificTitleForm) }}
+        {{ form_row(scientificTitleForm.beginWith) }}
+        {{ form_row(scientificTitleForm.endWith) }}
+        {{ form_row(scientificTitleForm.grade) }}
+
+    </div>
+{% endmacro %}
+
+
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
+<div class="row">
+    <div class="col-md-4">
+
+        {{ form_errors(form) }}
+        {{ form_row(form.firstName) }}
+        {{ form_row(form.middleName) }}
+        {{ form_row(form.lastName) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.secondEmail) }}
+        {{ form_row(form.section) }}
+        {{ form_row(form.laboratory) }}
+        {{ form_row(form.isRetired) }}
+        {{ form_row(form.scrapperToken) }}
+        {{ form_row(form.emailToken) }}
+
+    </div>
+    <div class="col-md-4">
+        <div class="js-collection-wrapper"
+             data-prototype="{{ formMacros.printUserIdentificatorRow(form.identificators.vars.prototype)|e('html_attr') }}"
+             data-index="{{ form.identificators|length }}">
+
+            {% for wosIdentificator in form.identificators %}
+                {{ formMacros.printUserIdentificatorRow(wosIdentificator) }}
+            {% endfor %}
+
+        </div>
+        <div class="buttons">
+            <a href="#" class="js-collection-item-add" data-wrapper="js-collection-wrapper">
+                <span class="fa fa-plus-circle"></span>
+                add wos identificator
+            </a>
+            {# prevents weird label from showing up in new #}
+            {{ form_widget(form.identificators ) }}
+
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="js-collection-wrapper2"
+             data-prototype="{{ formMacros.printScientificTitleRow(form.scientificTitles.vars.prototype)|e('html_attr') }}"
+             data-index="{{ form.scientificTitles|length }}">
+
+            {% for scientificTitle in form.scientificTitles %}
+                {{ formMacros.printScientificTitleRow(scientificTitle) }}
+            {% endfor %}
+
+        </div>
+        <div class="buttons">
+            <a href="#" class="js-collection-item-add" data-wrapper="js-collection-wrapper2">
+                <span class="fa fa-plus-circle"></span>
+                add scientific title
+            </a>
+            {# prevents weird label from showing up in new #}
+            {{ form_widget(form.scientificTitles ) }}
+
+        </div>
+    </div>
+
+</div>
+<button class="btn btn-primary btn-lg btn-block">{{ button_label|default('Save') }}</button>
+<br>
+{{ form_end(form) }}

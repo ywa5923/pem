@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Journal{% endblock %}
+{% block pageTitle %}
+    Create new Journal | <a href="{{ path('journal_index') }}">back to list</a>
+{% endblock %}
+{% block body %}
+    {{ include('journal/_form.html.twig') }}
+{% endblock %}

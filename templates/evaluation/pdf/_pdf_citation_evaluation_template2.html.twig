@@ -1,0 +1,33 @@
+<table style="width:100%;color:#2b5e92;background-color: #F2F1F1;text-align:justify;" cellspacing="4" cellpadding="1" >
+    <tr style="background-color:#2b5e92;color:white;">
+        <th style="text-align:justify" colspan="6">
+            <h4>Sectiunea A3: Total citari - {{ articles.totalPoints}} &nbsp; Punctaj:{{ articles.totalPoints/20|number_format(3)}}</h4>
+        </th>
+    </tr>
+<tr style="background-color:#FEC643;">
+    <th style="width:4%">#</th>
+    <th style="width:20%">Titlu articol</th>
+    <th style="width:15%">Autori</th>
+    <th style="width:16%">Jurnal</th>
+    <th style="width:4%">Total citari</th>
+    <th style="width:40%">Citari</th>
+</tr>
+{% for article in articles.items %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ article.title }}</td>
+        <td>{{ article.authors }}</td>
+        <td>{{ article.journal }} <b>{{ article.publicationDate|date('Y') }}</b></td>
+        <td><span style="background-color:green;color:white;font-size:12px;padding:5px">{{ article.citations|length }}</span></td>
+        <td>
+            {% for citation in article.citations %}
+                <b>[[{{loop.index}}]]</b>
+                <i>{{  citation.title }}</i>
+            <span style="background-color:green;color:white;font-size:10px;"> {{ citation.authors }}</span>&nbsp;
+                {{ citation.journal }}
+                <b>Publication date: ({{ citation.publicationDate|date('Y') }})</b>
+            {% endfor %}
+        </td>
+    </tr>
+{% endfor %}
+</table>

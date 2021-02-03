@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Settings{% endblock %}
+
+{% block pageTitle %}
+    Create new option |  <a href="{{ path('settings_index') }}">back to list</a>
+{% endblock %}
+
+{% block body %}
+    {{ include('settings/_form.html.twig') }}
+{% endblock %}

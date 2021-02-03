@@ -1,0 +1,210 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+    {% block stylesheets %}
+       <!-- Bootstrap core CSS -->
+       <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+       <!-- Custom styles for this template -->
+        <link href="{{ asset('assets/css/algolia-autocomplete.css') }}" rel="stylesheet"/>
+       <link href="{{ asset('assets/css/dashboard.css') }}" rel="stylesheet">
+
+   {% endblock %}
+
+    <title>{% block title %}EMP DASHBOARD{% endblock %}</title>
+
+</head>
+
+<body>
+<nav class="navbar sticky-top  flex-md-nowrap p-0 navbar-custom">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">NIMP</a>
+
+   <form class="search-form"> <input name="q" class="form-control form-control-dark w-100" type="text" value="{{ app.request.query.get('q') }}" placeholder="Search..." aria-label="Search"></form>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" href="#">Sign out</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path('dashboard_home') }}">
+                            <span data-feather="home"></span>
+                            Dashboard <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user_index') }}">
+                            <span data-feather="users"></span>
+                            Employees
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('article_index',{article_type:'scientific_paper'}) }}">
+                            <span data-feather="file"></span>
+                            Articles
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('article_index',{article_type:'patent'}) }}">
+                            <span data-feather="file"></span>
+                            Patents
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('article_index',{article_type:'book'}) }}">
+                            <span data-feather="file"></span>
+                            Books
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('project_index') }}">
+                            <span data-feather="file"></span>
+                            Contracts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('activity_index') }}">
+                            <span data-feather="file"></span>
+                            Activities
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('citation_index') }}">
+                            <span data-feather="file"></span>
+                            Citations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('journal_index') }}">
+                            <span data-feather="file"></span>
+                            Journals
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('work_interruption_index') }}">
+                            <span data-feather="file"></span>
+                            Work Interruptions
+                        </a>
+                    </li>
+
+                </ul>
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>NIMP reports</span>
+                    <a class="d-flex align-items-center text-muted" href="#">
+                        <span data-feather="plus-circle"></span>
+                    </a>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <span data-feather="bar-chart-2"></span>
+                            Performance Evaluation
+                        </a>
+                    </li>
+
+                </ul>
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>App Settigns</span>
+                    <a class="d-flex align-items-center text-muted" href="#">
+                        <span data-feather="plus-circle"></span>
+                    </a>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('settings_index') }}">
+                            <span data-feather="file-text"></span>
+                            Options
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('article_index',{article_type:'scientific_paper'}) }}">
+                            <span data-feather="file-text"></span>
+                            Patent rules
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('article_index',{article_type:'scientific_paper'}) }}">
+                            <span data-feather="file-text"></span>
+                            Article rules
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('article_index',{article_type:'scientific_paper'}) }}">
+                            <span data-feather="file-text"></span>
+                            Book rules
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <div class=" page-title">
+                  <i class="fab fa-pagelines" style="color:green"></i>
+                  {% block pageTitle %}{% endblock %}
+                </div>
+
+                <div class="btn-toolbar mb-2 mb-md-0 mr-2">
+                    {% block btnGroup %}{% endblock %}
+                </div>
+            </div>
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% set page=app.request.get('page') %}
+            {% if page is null %}
+                {% set page=1 %}
+            {% endif %}
+
+            {% block body %}{% endblock %}
+
+
+
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="{{ asset('assets/js/jquery-slim.min.js') }}"><\/script>')</script>
+<script src="{{ asset('assets/js/popper.min.js') }}"></script>
+<script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+
+<script src="{{ asset('assets/js/CollectionEmbeddedForms.js') }}"></script>
+
+<script src="{{ asset('assets/js/arrive-min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
+<script src="{{ asset('assets/js/algolia-autocomplete.js') }}"   ></script>
+
+{% block javascripts %}{% endblock %}
+</body>
+</html>
+
+

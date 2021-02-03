@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New WorkInterruption{% endblock %}
+
+
+{% block pageTitle %}
+   Add work interruption | <a href="{{ path('work_interruption_index') }}">back to list</a>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+            {{ include('work_interruption/_form.html.twig') }}
+        </div>
+        <div class="col-md-4">
+
+        </div>
+
+    </div>
+
+
+
+{% endblock %}

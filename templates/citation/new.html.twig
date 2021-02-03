@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Citation{% endblock %}
+{% block pageTitle %}
+    Create new citation | <a href="{{ path('citation_index') }}">back to list</a>
+{% endblock %}
+{% block body %}
+
+
+    {{ include('citation/_form.html.twig') }}
+
+{% endblock %}

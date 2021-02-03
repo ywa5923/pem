@@ -1,0 +1,69 @@
+{% import _self as formMacros %}
+
+{% macro printUserArticleRow(ArticleAuthorForm) %}
+    <div class="js-collection-item">
+        <a href="#" class="js-collection-item-remove pull-right">
+            <i class="fas fa-user-slash"></i> remove author
+        </a>
+        {{ form_errors(ArticleAuthorForm) }}
+        {{ form_row(ArticleAuthorForm.user) }}
+        {{ form_row(ArticleAuthorForm.isPrimeAuthor) }}
+        {{ form_row(ArticleAuthorForm.isCorrespondingAuthor) }}
+    </div>
+{% endmacro %}
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
+   <div class="row">
+       <div class="col-md-6">
+
+        {{ form_errors(form) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.type) }}
+           {{ form_row(form.pType,{label:'Tipul brevetului'}) }}
+        {{ form_row(form.authors) }}
+        {{ form_row(form.abstract) }}
+        {{ form_row(form.doi) }}
+        {{ form_row(form.journal) }}
+        {{ form_row(form.volume) }}
+        {{ form_row(form.pages) }}
+        {{ form_row(form.miscellanous) }}
+        {{ form_row(form.AIS) }}
+        {{ form_row(form.publicationDate) }}
+        {{ form_row(form.effectiveAuthorsNumber) }}
+        {{ form_row(form.corespondingAuthors) }}
+        {{ form_row(form.emailsOfCorespondingAuthors) }}
+        {{ form_row(form.primeAuthors) }}
+        {{ form_row(form.theNumberOfPrimeAuthors) }}
+        {{ form_row(form.theNumberOfCorrespondingAuthors) }}
+        {{ form_row(form.pages) }}
+        {{ form_row(form.totalPages) }}
+        {{ form_row(form.thetaFunction) }}
+        {{ form_row(form.isUpdatedByAdmin) }}
+        {{ form_row(form.miscellanous) }}
+
+
+       </div>
+       <div class="col-md-6">
+          <div class="js-collection-wrapper"
+             data-prototype="{{ formMacros.printUserArticleRow(form.articleAuthors.vars.prototype)|e('html_attr') }}"
+             data-index="{{ form.articleAuthors|length }}">
+
+            {% for articleUser in form.articleAuthors %}
+                {{ formMacros.printUserArticleRow(articleUser) }}
+            {% endfor %}
+
+          </div>
+           <div class="buttons">
+            <a href="#" class="js-collection-item-add" data-wrapper="js-collection-wrapper">
+                <span class="fa fa-plus-circle"></span>
+                add another author
+            </a>
+            {# prevents weird label from showing up in new #}
+            {{ form_widget(form.articleAuthors ) }}
+            <button class="btn btn-primary btn-lg btn-block">{{ button_label|default('Save') }}</button>
+           </div>
+      </div>
+ </div>
+{{ form_end(form) }}
+
+
+

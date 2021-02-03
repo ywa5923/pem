@@ -1,0 +1,16 @@
+<table style="width:100%;color:#2b5e92;background-color: #F2F1F1;text-align:center" cellspacing="2" cellpadding="1">
+
+    <tr style="background-color:#2b5e92;color:white;">
+        <th colspan="2">
+            <h4>Sectiunea A3: Citari - {{  citations.totalPoints|number_format(3) }} puncte</h4>
+        </th>
+    </tr>
+    <tr style="background-color:#FEC643;">
+        <th style="width:50%">Total citarii in ultimii 5 ani</th>
+        <th style="width:50%">Punctaj</th>
+    </tr>
+    <tr>
+        <td>{{ citations.citations }}</td>
+        <td>{{ citations.totalPoints|number_format(3) }}</td>
+    </tr>
+</table>

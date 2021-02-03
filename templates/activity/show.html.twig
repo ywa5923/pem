@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Activity{% endblock %}
+{% block pageTitle %}
+    Activity page
+    <a href="{{ path('activity_index') }}">back to list</a> |
+    <a href="{{ path('activity_edit', {'id': activity.id}) }}">edit</a> |
+
+    Created at: {{ activity.createdAt|date('Y-m-d')}} |
+    Updated at: {{ activity.updatedAt|date('Y-m-d') }}
+{% endblock %}
+
+{% block body %}
+
+    <table class="table table-striped table-hover table-sm table-responsive-md">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ activity.id }}</td>
+            </tr>
+            <tr>
+                <th>User</th>
+                <td> {{ activity.user.firstName~' '~ activity.user.middleName~' '~activity.user.lastName }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td> {{ activity.title }}</td>
+            </tr>
+            <tr>
+                <th>Year</th>
+                <td> {{ activity.year|date('Y') }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ activity.type }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ activity.description }}</td>
+            </tr>
+            <tr>
+                <th>Points</th>
+                <td>{{ activity.points }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

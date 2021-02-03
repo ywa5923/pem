@@ -1,0 +1,55 @@
+<table class="table table-striped table-hover table-sm table-responsive-md">
+
+    <tr>
+        <th colspan="8">
+            <h4>Sectiunea A1.3: Proiecte - {{ projects.totalPoints|number_format(2) }}</h4>
+        </th>
+    </tr>
+    <tr>
+        <th>Nr:</th>
+        <th>Nr contract</th>
+        <th>Calitatea salariatului</th>
+        <th>Sume incasate</th>
+        <th>Profit total</th>
+        <th>Incasari cu profit zero</th>
+        <th>Suma totala dupa aplicarea factorului de corectie</th>
+        <th>Punctaj</th>
+    </tr>
+
+    {% for project in projects.items %}
+        {% if project.projectType == 'international' %}
+            {% set correction=5 %}
+        {% elseif project.projectType == 'national'%}
+            {% set correction=1 %}
+        {% endif %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>
+                <b>{{ project.contract }}</b>
+                <hr>
+                Tip proiect: {{ project.projectType|capitalize }}
+
+
+            </td>
+            <td>{{ project.userType|capitalize }} proiect</td>
+            <td>
+                {% for budget in project.budgets %}
+
+                    {% if project.projectType=='economic'%}
+                        {% set correction=(budget.type=='profit')?20:2 %}
+                    {% endif %}
+
+                    <b>{{ budget.year|date('Y') }}</b><br>
+                    {{ budget.budget|number_format(2)  }} RON <br>
+                    ({{ budget.type }})<br>
+                    Factor corectie:{{ correction }}
+                    <HR>
+                {% endfor %}
+            </td>
+            <td>{{ project.totalProfit }} RON</td>
+            <td>{{ project.totalNonProfit }} RON</td>
+            <td>{{ project.totalBudgetWithCorrection }} RON</td>
+            <td>{{ project.total|number_format(2) }}</td>
+        </tr>
+    {% endfor %}
+</table>

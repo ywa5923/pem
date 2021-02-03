@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Journal{% endblock %}
+{% block pageTitle %}
+    Journal page
+    <a href="{{ path('journal_index') }}">back to list</a> |
+    <a href="{{ path('journal_edit', {'id': journal.id}) }}">edit</a>
+
+{% endblock %}
+{% block body %}
+
+<div class="row">
+    <table class="table table-striped table-hover table-sm table-responsive-md">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ journal.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ journal.name }}</td>
+            </tr>
+            <tr>
+                <th>Journal AIS factors</th>
+                <td>
+                    {% for factor in journal.journalFactors %}
+                        {{ factor.year|date('Y')~': '~factor.AIS|number_format(2) ~' | ' }}
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Journal Impact factors</th>
+                <td>
+                    {% for factor in journal.journalFactors %}
+                        {{ factor.year|date('Y')~': '~factor.impactFactor|number_format(2) ~' | ' }}
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

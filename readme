@@ -1,0 +1,43 @@
+
+Dockerized symfony app
+
+Run in your app folder: doctrine-compose up -d --build
+
+For DATABASE_URL (see .env file) you should write the internal IP of your php container: 
+linux: docker inspect <container id> | grep "IPAddress"
+windows: docker exec -it <container id> /bin/bash
+   then: cat /etc/hosts
+
+
+
+===============App console commands======================
+Import user.csv: php bin/console app:csv-import user user //(type, file)
+Import patent.csv: php bin/console app:csv-import patent patent //(type, file)
+Import article.csv: php bin/console app:csv-import article article
+
+Update user-article relation: php bin/console app:articles-update-authors patent (or article)
+
+Import jurnals from 2017 (journal2017.csv): php bin/console app:csv-import journal journal2017 2017
+
+Start webscrapper: php bin/console app:wos-get-citations
+
+
+//run webdriver
+cd pem/src/Command/WebDriver
+ java -jar selenium-server-standalone-3.9.1.jar
+
+/var/lib/motion
+https://www.maketecheasier.com/setup-motion-detection-webcam-ubuntu/
+//webdriver doc
+-https://github.com/php-webdriver/php-webdriver/wiki/Example-command-reference
+-https://github.com/php-webdriver/php-webdriver/wiki/HowTo-Wait
+-https://www.sitepoint.com/using-the-selenium-web-driver-api-with-phpunit/
+
+Self-Assembly of Graphene Nanoblisters Sealed to a Bare Metal Surface
+
+Spark plasma sintered MgB2 co-added with c-BN and C-60
+
+Pulsed Laser Fabrication of TiO2 Buffer Layers for Dye Sensitized Solar Cells Found excluded error:
+
+
+Non-equilibrium transport and spin dynamics in single-molecule magnets verificat(are o citare)

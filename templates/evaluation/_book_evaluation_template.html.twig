@@ -1,0 +1,34 @@
+<table class="table table-striped table-hover table-sm table-responsive-md">
+
+    <tr>
+        <th colspan="9">
+            <h4>Sectiunea A1.2: Carti si capitole de carte - {{ books.totalPoints|number_format(2) }} puncte</h4>
+        </th>
+    </tr>
+    <tr>
+        <th>Nr:</th>
+        <th>Titlu capitol carte</th>
+        <th>Autori</th>
+        <th>Neff</th>
+        <th>Titlu volum, editor</th>
+        <th>Editura, oras,tara,anul publicarii</th>
+        <th>ISBN/ISSN</th>
+        <th>pag. inceput- pag. sfarsit</th>
+        <th>Punctaj</th>
+
+    </tr>
+
+    {% for book in books.items %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.authors }}</td>
+            <td>{{ book.neff }}</td>
+            <td>{{ book.journal }}</td>
+            <td>{{ book.miscellanous }}</td>
+            <td>{{ book.isbn }}</td>
+            <td>{{ book.pages}}</td>
+            <td>{{ book.total }}</td>
+        </tr>
+    {% endfor %}
+</table>

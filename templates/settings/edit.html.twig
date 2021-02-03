@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Settings{% endblock %}
+{% block pageTitle %}
+    Edit option|
+    <a href="{{ path('settings_index') }}">Back to settings</a>
+{% endblock %}
+{% block body %}
+
+    {{ include('settings/_form.html.twig', {'button_label': 'Update'}) }}
+   <br>
+    {{ include('settings/_delete_form.html.twig') }}
+{% endblock %}

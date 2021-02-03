@@ -1,0 +1,109 @@
+{% import _self as formMacros %}
+
+{% macro printUserProjectRow(UserProjectForm) %}
+    {% import _self as profitMacro %}
+
+    <div class="col-md-4 js-collection-item author-item">
+        <a href="#" class="js-collection-item-remove pull-right">
+            <i class="fas fa-user-slash"></i> remove author
+        </a>
+        {{ form_errors(UserProjectForm) }}
+        {{ form_row(UserProjectForm.user) }}
+        {{ form_row(UserProjectForm.type,{'label':'Role'}) }}
+
+        {% set randomClass = 'js-inner-collection-wrapper-' ~ random() %}
+
+        <div class="{{ randomClass }}"
+             data-prototype="{{ profitMacro.printBudgetRow(UserProjectForm.budgets.vars.prototype)|e('html_attr') }}"
+             data-index="{{ UserProjectForm.budgets|length }}">
+
+            {% for budget in  UserProjectForm.budgets %}
+                {{ profitMacro.printBudgetRow(budget) }}
+            {% endfor %}
+
+        </div>
+        <div class="buttons">
+            <a href="#" class="js-collection-item-add"
+               data-wrapper="{{ randomClass }}"
+               data-prototype-name="__budget_name__"
+            >
+                <span class="fa fa-plus-circle"></span>
+                add budget
+            </a>
+        </div>
+
+        {# prevents weird label from showing up in new #}
+        {{ form_widget(UserProjectForm.budgets ) }}
+    </div>
+{% endmacro %}
+
+{% macro printBudgetRow(budgetForm) %}
+    <div class="js-collection-item budget-item">
+        <a href="#" class="js-collection-item-remove pull-right">
+            <i class="fas fa-trash-alt"></i>
+            remove budget
+        </a>
+        {{ form_errors(budgetForm) }}
+        {{ form_row(budgetForm.year,{'label':'Year'}) }}
+        {{ form_row(budgetForm.type,{'label':'Income'}) }}
+        {{ form_row(budgetForm.budget,{'label':'Amount (RON)'}) }}
+    </div>
+{% endmacro %}
+
+{{ form_start(form,{'attr': {'novalidate': 'novalidate'}}) }}
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.title) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.type) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.contract) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.category) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.beginDate) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.endDate) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {{ form_row(form.description) }}
+    </div>
+</div>
+
+<div class=" row js-collection-wrapper "
+     data-prototype="{{ formMacros.printUserProjectRow(form.projectUsers.vars.prototype)|e('html_attr') }}"
+     data-index="{{ form.projectUsers|length }}">
+
+    {% for projectUser in form.projectUsers %}
+        {{ formMacros.printUserProjectRow(projectUser) }}
+    {% endfor %}
+
+</div>
+<div class="buttons">
+    <a href="#"
+       class="js-collection-item-add"
+       data-wrapper="js-collection-wrapper"
+       data-prototype-name="__userProjectEmbedded_name__"
+    >
+        <span class="fa fa-plus-circle"></span>
+        add another user
+    </a>
+    {# prevents weird label from showing up in new #}
+    {{ form_widget(form.projectUsers ) }}
+    <button class="btn btn-primary btn-lg btn-block">{{ button_label|default('Save') }}</button>
+</div>
+
+{{ form_end(form) }}
+
+
