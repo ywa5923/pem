@@ -86,7 +86,7 @@ class ExportEvaluationcommand extends Command{
         $users=$this->entityManager->getRepository(User::class)
             ->getScientists();
 
-        $file = fopen("evaluation2020_CU_NR_ARTICOLE.csv","w");
+        $file = fopen("evaluation{$year}_CU_NR_ARTICOLE.csv","w");
         fputcsv($file,[
             "Angajat",
             "Titlu stiintific",

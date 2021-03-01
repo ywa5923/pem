@@ -47,6 +47,14 @@ class WosSite extends AbstractController
     }
 
     /**
+     * @Route("/exclude_types")
+     */
+    public function exclude_types()
+    {
+        return $this->render('wos/exclude_types.html.twig');
+    }
+
+    /**
      * @Route("/refine-years")
      */
     public function refineYears()

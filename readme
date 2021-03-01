@@ -12,19 +12,24 @@ windows: docker exec -it <container id> /bin/bash
 
 ===============App console commands======================
 Import user.csv: php bin/console app:csv-import user user //(type, file)
-Import patent.csv: php bin/console app:csv-import patent patent //(type, file)
+Import patent.csv: php bin/console app:csv-import patent patent //(type, file: ex: php bin/console app:csv-import article articole2020)
 Import article.csv: php bin/console app:csv-import article article
 
 Update user-article relation: php bin/console app:articles-update-authors patent (or article)
 
 Import jurnals from 2017 (journal2017.csv): php bin/console app:csv-import journal journal2017 2017
 
-Start webscrapper: php bin/console app:wos-get-citations
+Start webscrapper: php bin/console app:get-wos-citations2
+
+Export evaluation:php bin/console app:evaluation-export 2021
 
 
 //run webdriver
 cd pem/src/Command/WebDriver
  java -jar selenium-server-standalone-3.9.1.jar
+
+
+ -in ArticleImporter trebuie setat anul la randul 116
 
 /var/lib/motion
 https://www.maketecheasier.com/setup-motion-detection-webcam-ubuntu/
@@ -33,11 +38,13 @@ https://www.maketecheasier.com/setup-motion-detection-webcam-ubuntu/
 -https://github.com/php-webdriver/php-webdriver/wiki/HowTo-Wait
 -https://www.sitepoint.com/using-the-selenium-web-driver-api-with-phpunit/
 
-Self-Assembly of Graphene Nanoblisters Sealed to a Bare Metal Surface
+Multilevel Memristive GeTe Devices
+Textile Materials Treatment With Mixture of TiO2:N and SiO(2)Nanoparticles for Improvement of Their Self-Cleaning Properties
+Pulsed Laser Deposition Films Based on CdSe-Doped Zinc Aluminophosphate Glass
+Insight on spectral, thermal and biological behaviour of some Cu(II) complexes with saturated pentaazamacrocyclic ligands bearing amino acid residues
 
-Spark plasma sintered MgB2 co-added with c-BN and C-60
 
-Pulsed Laser Fabrication of TiO2 Buffer Layers for Dye Sensitized Solar Cells Found excluded error:
-
-
-Non-equilibrium transport and spin dynamics in single-molecule magnets verificat(are o citare)
+Observatii:
+-la ArticleImporter.php trebuie modificat anul inainte de importarea articolelor
+- cand sunt mai multi autori primi sau corespondenti reclamati prin email se modifica campurile no of prime autors ,etc...
+- unele dintre citarile importate au campul published null si trebuie completat manual.

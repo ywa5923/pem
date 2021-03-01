@@ -105,6 +105,15 @@
     "gedmo/doctrine-extensions": {
         "version": "v2.4.36"
     },
+    "guzzlehttp/guzzle": {
+        "version": "7.2.0"
+    },
+    "guzzlehttp/promises": {
+        "version": "1.4.0"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.7.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -144,11 +153,20 @@
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
     },
+    "phpmailer/phpmailer": {
+        "version": "v6.2.0"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
     "psr/container": {
         "version": "1.0.0"
+    },
+    "psr/http-client": {
+        "version": "1.0.1"
+    },
+    "psr/http-message": {
+        "version": "1.0.1"
     },
     "psr/link": {
         "version": "1.0.0"
@@ -159,11 +177,17 @@
     "psr/simple-cache": {
         "version": "1.0.1"
     },
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
+    },
     "sendgrid/php-http-client": {
         "version": "3.10.3"
     },
     "sendgrid/sendgrid": {
         "version": "7.4.3"
+    },
+    "sendinblue/api-v3-sdk": {
+        "version": "v7.4.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
@@ -176,6 +200,9 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "starkbank/ecdsa": {
+        "version": "0.0.4"
     },
     "stof/doctrine-extensions-bundle": {
         "version": "1.2",

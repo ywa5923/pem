@@ -121,14 +121,13 @@ class ExportPDFCommand extends Command
         ]);
 
         $projectDir= $this->container->getParameter('kernel.project_dir');
-        $imgPath=sprintf("%s/screenshots/%s.png",
-           $projectDir,
-            $user->getEmail()
+        $path=sprintf("%s/pdf",
+           $projectDir
         );
-
-        //$pdfName=sprintf('%s/pdf/%s.pdf',$projectDir,str_replace(' ','_',$user));
-        $pdfName='';
-        $this->PDFService->getPDF($html,$imgPath,$pdfName,'F');
+       
+        $pdfName= $user->getEmail().".pdf";
+        $this->PDFService->getPDF($html,$path,$pdfName,'F');
+      
     }
 
     public function getEvaluation(int $userId,int $year):array

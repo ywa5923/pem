@@ -24,6 +24,10 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Service\PDF\PDFService;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 /**
  * @Route("/evaluation")
  */
@@ -131,12 +135,49 @@ class EvaluationController extends AbstractController
         }
     }
 
+    
+    public function sendGmail($to,$name,$body,$pdf){
+
+        $mail = new PHPMailer(true);
+        try{
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+            $mail->isSMTP();                                            // Send using SMTP
+            $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+            $mail->Username   = 'ivanion10@gmail.com';                     // SMTP username
+            $mail->Password   = 'Punctulrosu12';                               // SMTP password
+             //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+             $mail->Port       = 465;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+            //Recipients
+             $mail->setFrom('ion.ivan@infim.ro', 'Ion Ivan');
+             $mail->addAddress($to, $name);     // Add a recipient
+
+             $mail->addStringAttachment($pdf,$name."_evaluare2021.pdf");
+           // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+
+           // Content
+           $mail->isHTML(true);                                  // Set email format to HTML
+           $mail->Subject = 'Evaluare profesionala finala 2021';
+           $mail->Body    = $body;
+           $mail->send();
+           return "ok";
+
+        }catch(Exception $e){
+            throw new Exception("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        
+        }
+
+
+    }
+
     /**
      * @Route("/download-pdf/{id}/{year}/{action}", name="download-evaluation")
      */
     public function download(Request $request,User $user,$year,$action)
     {
-
 
         $html = $this->renderView('evaluation/pdf/pdf_template.hml.twig', [
             'user_full_name' => $user,
@@ -149,9 +190,10 @@ class EvaluationController extends AbstractController
             $user->getEmail()
             );*/
         //$imgPath=$this->getParameter('kernel.project_dir')."/screenshots/'.$user->getEmail().'.png';
+
         $pdfName=$user.".pdf";
 
-        $pdf=$this->PDFService->getPDF($html,null);
+        $pdf=$this->PDFService->getPDF($html);
 
         if($action==='download_pdf'){
             $response=new Response($pdf);
@@ -163,44 +205,18 @@ class EvaluationController extends AbstractController
             $response->headers->set('Content-Disposition', $disposition);
             return $response;
         }elseif($action="send_email"){
-           /* $message = (new \Swift_Message('Evaluare profesionala'))
-            ->setFrom('ion.ivan@infim.ro')
-                ->setTo($user->getEmail());
-            $message->setBody(
-                $this->renderView('evaluation/email/template.html.twig',[])
-            );
-            $message->attach( new \Swift_Attachment($pdf, 'evaluare_profesionala.pdf', 'application/pdf'));
-            $status=$this->mailer->send($message);
-            if($status===1){
-                $this->addEmailToken($user);
-            }
-            return new Response($status);*/
-           $email=new \SendGrid\Mail\Mail();
-           $email->setFrom("ion.ivan@infim.ro","Ion Ivan");
-           $email->setSubject("Rezultate finale, evaluare profesionala NIMP 2021");
+           
+        try{
+            $body=$this->renderView('evaluation/email/template.html.twig',[]);
 
-           $email->addTo($user->getEmail(),"Nimp user");
-           $email->addContent("text/html",$this->renderView('evaluation/email/template.html.twig',[]));
+            $this->sendGmail($user->getEmail(),$user->getLastName(),$body,$pdf);
+            $this->addEmailToken($user);
+            return new Response("ok");
 
-           $att= new \SendGrid\Mail\Attachment();
-           $att->setContent($pdf);
-           $att->setType("application/pdf");
-           $att->setFilename($pdfName);
-           $att->setDisposition("attachment");
-           $email->addAttachment($att);
-
-
-            $sendgrid=new \SendGrid('enter here password');
-
-           try{
-               $response=$sendgrid->send($email);
-               if($response->statusCode()===202){
-                   $this->addEmailToken($user);
-               }
-               return new Response($response->statusCode().PHP_EOL.$response->body());
-           }catch(\Exception $ex){
-               return new Response($ex->getMessage());
-           }
+        }catch(Exception $ex){
+            return new Response($ex->getMessage());
+        }
+       
         }
 
     }
@@ -233,8 +249,3 @@ class EvaluationController extends AbstractController
     }
 }
 
-/**
- *
-it worked adding these two lines $options['ssl']['verify_peer'] = FALSE; $options['ssl']['verify_peer_name'] = FALSE;
- * In this file: vendor\swiftmailer\swiftmailer\lib\classes\Swift\Transport\StreamBuffer.php in the function _establishSocketConnection(), but of course I won't do this in production server
- */

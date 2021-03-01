@@ -18,7 +18,7 @@ class PDFService
         $this->parameterBag = $parameterBag;
     }
 
-    public function getPDF($html,$img,$pdfName='',$mode='S')
+    public function getPDF($html,$path='',$pdfName='',$mode='S')
     {
 
         $logo= $this->parameterBag->get('kernel.project_dir').'/src/Service/PDF/Util/logo.png';
@@ -62,16 +62,16 @@ class PDFService
 
         $pdf->Image($logo, 10, 4, 74, 18, 'PNG');
         $pdf->SetXY(20, 32);
-        $pdf->Cell(0, 0, "Evaluare profesionala 2020", 0, false, 'C', 0, '', 0, false, 'M', 'M');
+        $pdf->Cell(0, 0, "Evaluare profesionala 2021", 0, false, 'C', 0, '', 0, false, 'M', 'M');
         $pdf->SetXY(20, 23);
         $pdf->writeHTML("<hr style='color:red'>", true, false, false, false, '');
 
         $pdf->SetFont('dejavusans', '', 7, '', true);
         $pdf->writeHTML($html, true, false, true, false, '');
         $pdf->AddPage();
-        $pdf->Image($img, 7, 22, 200, 150, 'PNG');
+       // $pdf->Image($img, 7, 22, 200, 150, 'PNG');
 
-        return  $pdf->Output($pdfName, $mode);
+        return  $pdf->Output($path.DIRECTORY_SEPARATOR.$pdfName, $mode);
 
     }
 }

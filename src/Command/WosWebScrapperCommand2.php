@@ -32,6 +32,7 @@ class WosWebScrapperCommand2 extends Command
 
     public function execute(InputInterface $input,OutputInterface $output)
     {
+
       $io = new SymfonyStyle($input,$output);
 
 
@@ -49,10 +50,16 @@ class WosWebScrapperCommand2 extends Command
         );
 
         $wosScrapper->login();
+       
+         //test exclude types:
+         //$excludeTypes=["EDITORIAL MATERIAL","EARLY ACCESS","MEETING ABSTRACT","CORRECTION"];
+         //$wosScrapper->testExcludeTypes($excludeTypes);
+         
+         //exit();
 
         //$wosScrapper->getCitations(100);
         //exit();
-        //$excludeTypes=["EDITORIAL MATERIAL","EARLY ACCESS","MEETING ABSTRACT","CORRECTION"];
+        
         //$wosScrapper->doArticlesRefine( $excludeTypes);
         //exit();
         //$wosScrapper->excludeArticleTypes();
@@ -69,7 +76,7 @@ class WosWebScrapperCommand2 extends Command
         ]);
 
       //grab all articles
-        $articles=$this->entityManager->getRepository(Article::class)->getYearIntervalArticles(2015,2019,$scrapperToken->getValue());
+        $articles=$this->entityManager->getRepository(Article::class)->getYearIntervalArticles(2016,2020,$scrapperToken->getValue());
 
         $io->progressStart(count($articles));
 

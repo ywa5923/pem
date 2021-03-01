@@ -183,6 +183,7 @@ class WosScrapper2
     public function clickSearch()
     {
         //breadCrumbs
+        sleep(2);
         $this->driver->findElement(WebdriverBy::cssSelector('ul.breadCrumbs>li>a.snowplow-searchback'))->click();
     }
 
@@ -207,7 +208,7 @@ class WosScrapper2
         if($found && $element=$this->elementExists($documentTypeSelector)){
             $this->driver->executeScript("arguments[0].scrollIntoView();",[$element]);
             $element->click();
-            sleep(4);
+            sleep(2);
             $this->doArticlesRefine($excludeTypes);
             sleep(2);
             return true;
@@ -224,6 +225,48 @@ class WosScrapper2
 
     }
 
+    public function testExcludeTypes($excludeTypes){
+       
+       
+        $this->driver->get('http://localhost/wos/exclude_types');
+        sleep(3);
+
+        //get all elements tr#DocumentType_raMore_tr>td>table>tbody td.refineItem
+        $elements = $this->driver->wait(3600,1000)->until(
+            WebDriverExpectedCondition::presenceOfAllElementsLocatedBy(WebDriverBy::cssSelector("tr#DocumentType_raMore_tr>td>table>tbody td.refineItem"))
+        );
+       // dump($elements2);
+        $element=$this->driver->findElement(WebdriverBy::cssSelector("#DocumentType_raMore_tr > td > table > tbody > tr > td:nth-child(5)"));
+       $c = $element->findElement(WebdriverBy::xpath("preceding-sibling::td[1]/input[@type='checkbox']"));
+        $c->click();
+        foreach ( $elements as $element) {
+            $element->click();
+            foreach($excludeTypes as $exclude){
+                if(strpos($element->getText(),$exclude)!==FALSE){
+                    dump("Exclude: ".$exclude,"-->".$element->getText());
+                    sleep(3);
+                   $element->click();
+                   
+                   break;
+                }
+
+            }
+
+        }
+
+        sleep(2);
+        //get elements and click Refine
+        $buttons= $this->driver->findElements(WebdriverBy::cssSelector('div.more_title'));
+        foreach ($buttons as $button)
+        {
+            if(strpos($button->getText(),'Exclude')!==FALSE){
+                $button->click();
+                break;
+            }
+        }
+
+    }
+
     public function doArticlesRefine($excludeTypes)
     {
         //$this->driver->get('http://localhost/wos/refine-document-type');
@@ -233,10 +276,13 @@ class WosScrapper2
         $elements = $this->driver->wait(3600,1000)->until(
             WebDriverExpectedCondition::presenceOfAllElementsLocatedBy(WebDriverBy::cssSelector("tr#DocumentType_raMore_tr>td>table>tbody td.refineItem"))
         );
+       // $elements=$this->driver->findElements(WebdriverBy::cssSelector("tr#DocumentType_raMore_tr>td>table>tbody td.refineItem"));
         foreach ( $elements as $element) {
+            
             foreach($excludeTypes as $exclude){
                 if(strpos($element->getText(),$exclude)!==FALSE){
-                   $element->click();
+                    $checkbox = $element->findElement(WebdriverBy::xpath("preceding-sibling::td[1]/input[@type='checkbox']"));
+                    $checkbox->click();
                    break;
                 }
 
@@ -365,6 +411,7 @@ class WosScrapper2
 
             //go to main window
             $this->driver->switchTo()->window($this->driver->getWindowHandles()[0]);
+            sleep(2);
 
         }
         return $articles;
