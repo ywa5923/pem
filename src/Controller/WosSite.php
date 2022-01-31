@@ -54,6 +54,13 @@ class WosSite extends AbstractController
         return $this->render('wos/exclude_types.html.twig');
     }
 
+     /**
+     * @Route("/more")
+     */
+    public function more()
+    {
+        return $this->render('wos/more.html.twig');
+    }
     /**
      * @Route("/refine-years")
      */

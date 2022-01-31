@@ -51,20 +51,6 @@ class WosWebScrapperCommand2 extends Command
 
         $wosScrapper->login();
        
-         //test exclude types:
-         //$excludeTypes=["EDITORIAL MATERIAL","EARLY ACCESS","MEETING ABSTRACT","CORRECTION"];
-         //$wosScrapper->testExcludeTypes($excludeTypes);
-         
-         //exit();
-
-        //$wosScrapper->getCitations(100);
-        //exit();
-        
-        //$wosScrapper->doArticlesRefine( $excludeTypes);
-        //exit();
-        //$wosScrapper->excludeArticleTypes();
-        //exit();
-        //$wosScrapper->selectOrganization();
         sleep(5);
 
 
@@ -83,24 +69,49 @@ class WosWebScrapperCommand2 extends Command
         foreach($articles as $article)
         {
             if(!empty($article->getDoi())){
+                $io->writeln($article->getTitle()."=> by doi");
                 $wosScrapper->selectArticle(['searchString'=>$article->getDoi(),'identificator'=>'doi']);
+               
             }else{
+                $io->writeln($article->getTitle()."=> by title");
                 $wosScrapper->selectArticle(['searchString'=>$article->getTitle(),'identificator'=>'title']);
+               
+               
             }
             sleep(3);
-            $excludeTypes=["CORRECTION"];
-            $wosScrapper->excludeArticleTypes($excludeTypes);
+           // $excludeTypes=["CORRECTION"];
+           // $wosScrapper->excludeArticleTypes($excludeTypes);
+            //de facut
+           $wosScrapper->clickCitation();
+          
+            sleep(6);
+            //$excludeTypes=["EDITORIAL MATERIAL","EARLY ACCESS","MEETING ABSTRACT","CORRECTION"];
+            $excludeTypes=["Document Types: Meeting Abstract","Document Types: Early Access","Document Types: Editorial Materials","Document Types: Correction"];
+            $includeTypes=["Document Types: Review Articles","Document Types: Articles","Document Types: Proceedings Papers"];
+            //Document Types: Cited Reference,Document Types: Journal Paper,Document Types: Journal Article,Document Types: Review Articles
+            //Document Types: Research Support, Non-U.S. Gov't,Document Types: Editorial Materials,Document Types: Research Support, U.S. Gov't, Non-PHS
+            //Document Types: Research Article,Document Types: Comment,Document Types: Conference Paper,Document Types: Notes
+            //Document Types: Book Chapters
+          
 
-            $wosScrapper->clickCitation();
-            sleep(3);
-            $excludeTypes=["EDITORIAL MATERIAL","EARLY ACCESS","MEETING ABSTRACT","CORRECTION"];
-            $remainsOtherCitationTypes=$wosScrapper->excludeArticleTypes($excludeTypes);
+            If($wosScrapper->citationsFound!=0){
 
-            if( $remainsOtherCitationTypes===false){
+            }
+          
+           
+             
+
+            if($wosScrapper->citationsFound!=0 ){
+
+                 //if none of the exclude type is presented, the scrapper have to select the included type and click Refine in order to have access to citations elements
+           $remainsOtherCitationTypes=$wosScrapper->excludeArticleTypes($excludeTypes,$includeTypes);
+           // $wosScrapper->refineArticleTypes( $includeTypes);
+
+
+            if( $wosScrapper->allCitationsExcluded){
                 //found an article with all types  in the exclude array so continue
-                $io->writeln("----Found only citation in excluded types: ".$article->getTitle());
+                $io->writeln("----Found only citations in excluded types: ".$article->getTitle());
             }
-            if($wosScrapper->citationsFound!=0 &&  $remainsOtherCitationTypes){
 
                 sleep(2);
 
@@ -126,8 +137,8 @@ class WosWebScrapperCommand2 extends Command
             $io->progressAdvance();
 
             //get back to search panel
-            $wosScrapper->clickSearch();
-            sleep(5);
+           $wosScrapper->clickSearch();
+            sleep(2);
         }
 
         $io->progressFinish();

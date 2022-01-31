@@ -48,3 +48,6 @@ Observatii:
 -la ArticleImporter.php trebuie modificat anul inainte de importarea articolelor
 - cand sunt mai multi autori primi sau corespondenti reclamati prin email se modifica campurile no of prime autors ,etc...
 - unele dintre citarile importate au campul published null si trebuie completat manual.
+
+
+https://www.webofscience.com/wos/woscc/summary/18ab12e0-3a51-428d-a705-0e67fe17f407-216e5826/date-descending/1
