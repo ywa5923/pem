@@ -92,6 +92,8 @@ class WosScrapper2
             $this->driver->findElement(WebDriverBy::id('signIn-btn'))->click();
             sleep(3);
             $this->io->writeln($pageTitle);
+
+
         } catch (\Exception $ex) {
             $this->io->writeln($ex->getMessage());
         }
@@ -121,15 +123,18 @@ class WosScrapper2
           
             //select DOI
             //#snSearchType > div.row.ng-star-inserted > app-search-row > div > div.search-criteria-input-holder.ng-star-inserted > input
+           
+            $doiSelector='#global-select > div.options-and-search > div.options > div.wrap-mode.ng-star-inserted[title="DOI"]';
+
             $this->driver->wait()->until(
-                WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::cssSelector('#global-select > div.options-and-search > div.options > div.wrap-mode.ng-star-inserted[aria-label="DOI"]'))
+                WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::cssSelector($doiSelector))
             )->click();
         }else{
             $this->driver->executeScript('arguments[0].scrollBy(0,3);', [$divOptions]);
            //click on title
-           
+           $titleSelector='#global-select > div.options-and-search > div.options > div.wrap-mode.ng-star-inserted[title="Title"]';
            $this->driver->wait()->until(
-            WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::cssSelector('#global-select > div.options-and-search > div.options > div.wrap-mode.ng-star-inserted[aria-label="Title"]'))
+            WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::cssSelector( $titleSelector))
         )->click();
 
         }
@@ -264,9 +269,12 @@ class WosScrapper2
             $this->allCitationsExcluded=true;
         }
         elseif($found!=0 && count($excludeTypes)!==$found){
+
+            //click exclude
             $this->driver->findElement(WebdriverBy::cssSelector('#filter-section-DT > div > div > div > button.mat-focus-indicator.refine-button.uppercase-button.mat-stroked-button.mat-button-base.mat-primary.ng-star-inserted > span.mat-button-wrapper'))->click();
         }elseif($found===0){
-         
+            //refine
+            /*
             //click all document types and then refine(this is needed in order to select the citation elements)
             foreach ( $elements as $element) {
                 // $this->io->writeln($element->getAttribute('title'));
@@ -277,7 +285,8 @@ class WosScrapper2
              }
              $this->driver->findElement(WebdriverBy::cssSelector('#filter-section-DT > div > div > div > button.mat-focus-indicator.refine-button.uppercase-button.mat-flat-button.mat-button-base.mat-primary.ng-star-inserted'))->click();
 
-        }
+        */
+            }
     }
 
     public function testExcludeTypes($excludeTypes){
@@ -358,7 +367,7 @@ class WosScrapper2
 
     }
 
-    public function getCitations($citationNumber)
+    public function getCitations($citationNumber=null)
     {
         $articles=[];
 
@@ -421,6 +430,42 @@ class WosScrapper2
 
     }
 
+    public function testPagination()
+    {
+       
+        $this->driver->get('https://www.webofscience.com/wos/woscc/summary/1edf4552-5de9-4754-8536-b12d300d4ac4-21d7c764/date-descending/1');
+        sleep(10);
+        $excludeTypes=["Document Types: Meeting Abstract","Document Types: Early Access","Document Types: Editorial Materials","Document Types: Correction"];
+        $includeTypes=["Document Types: Review Articles","Document Types: Articles","Document Types: Proceedings Papers"];
+       // $this->excludeArticleTypes( $excludeTypes, $includeTypes);
+        sleep(2);
+
+        $nextBtn= $this->driver->findElement(WebdriverBy::cssSelector('form.pagination button[aria-label="Bottom Next Page"]'));
+        while($nextBtn->getAttribute("disabled")!=="true"){
+             sleep(3);
+ 
+             $nextBtn->click();
+             sleep(3);
+             /*$paginationNext=WebdriverBy::cssSelector('a.paginationNext');
+             if($this->elementExists( $paginationNext)) {
+                 $element = $this->driver->wait(3600,1000)->until(
+                     WebDriverExpectedCondition::presenceOfElementLocated($paginationNext)
+                 );
+                 // $this->driver->getMouse()->mouseMove( $element->getCoordinates() );
+                 $this->driver->executeScript("arguments[0].scrollIntoView();", [$element]);
+                 sleep(3);
+                 $element->click();
+ 
+                 sleep(5);
+                 $a=$this->grabCitations2();
+                 $articles=array_merge($articles,$a);
+             }*/
+         }
+    }
+    
+
+    
+
     public function grabCitations2():array
     {
         //more btn for author: #SumAuthTa-FrToggle-author-en
@@ -457,16 +502,18 @@ class WosScrapper2
             $this->driver->get($url);
 
             sleep(2);
-           /* $mainArticleBody = $this->driver->wait(3600,1000)->until(
-                WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::cssSelector("#snMainArticle"))
-            );*/
+            //waiting for authors element
+            $this->driver->wait(3600,1000)->until(
+                WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::cssSelector("#SumAuthTa-MainDiv-author-en"))
+            );
             sleep(2);
 
              //click on More if it exists
-            $moreBtnSelector=WebdriverBy::cssSelector('#SumAuthTa-FrToggle-author-en');
+          
+            $moreBtnSelector=WebdriverBy::cssSelector('#SumAuthTa-FrToggle-author-en > button');
             if($moreBtn=$this->elementExists($moreBtnSelector)) {
                 $moreBtn->click();
-                sleep(1);
+                sleep(2);
             }
             $titleElement=$this->driver->findElement(WebdriverBy::cssSelector("#FullRTa-fullRecordtitle-0"));
             $authorsElement=$this->driver->findElement(WebdriverBy::cssSelector("#SumAuthTa-MainDiv-author-en"));
@@ -485,10 +532,9 @@ class WosScrapper2
             
             $article=[
                 'title'=>$titleElement->getText(),
-               // 'authors'=>str_replace("By: ",'',$element->findElement(WebdriverBy::cssSelector('div:nth-child(2)'))->getText()),
                 'journal'=> $journalElement->getText(),
                 'publishedDate'=>$bublishedElement->getText(),
-                'authors'=>preg_replace(['/\[.*?\]/','/\(.*?\)/','/By:/','/\.\.\.Less/'],"",$authorsElement->getText())
+                'authors'=>preg_replace(['/\[.*?\]/','/\(.*?\)/','/By\n/','/\.\.\.Less/'],"",$authorsElement->getText())
             ];
            
             //close tab
@@ -506,6 +552,48 @@ class WosScrapper2
 
         return $articles;
 
+    }
+
+    public function testMoreBtn()
+    {
+        $this->driver->get('https://www.webofscience.com/wos/alldb/full-record/WOS:000427505300016');
+        sleep(3);
+         //click on More if it exists
+         //#SumAuthTa-FrToggle-author-en > button
+         $moreBtnSelector=WebdriverBy::cssSelector('#SumAuthTa-FrToggle-author-en > button');
+         if($moreBtn=$this->elementExists($moreBtnSelector)) {
+             $moreBtn->click();
+             sleep(2);
+         }
+         //#FullRTa-fullRecordtitle-0
+         $titleElement=$this->driver->findElement(WebdriverBy::cssSelector("#FullRTa-fullRecordtitle-0"));
+         $authorsElement=$this->driver->findElement(WebdriverBy::cssSelector("#SumAuthTa-MainDiv-author-en"));
+         $bublishedElement=$this->driver->findElement(WebdriverBy::cssSelector("#FullRTa-pubdate"));
+         
+        
+
+         $journalSelector1=WebdriverBy::cssSelector("#snMainArticle > app-jcr-overlay > span > button");
+         $journalSelector2=WebdriverBy::cssSelector("#snMainArticle > app-jcr-overlay span.summary-source-title");
+
+         $journalElement=($jrn=$this->elementExists($journalSelector1))?$jrn:($this->driver->findElement( $journalSelector2));
+
+        // $journalElement=$this->driver->findElement(WebdriverBy::cssSelector("#snMainArticle > app-jcr-overlay > span > button"));;
+         //  $element=$this->driver->findElement(WebdriverBy::cssSelector("#DocumentType_raMore_tr > td > table > tbody > tr > td:nth-child(5)"));
+
+         $autors=preg_replace(['/\[.*?\]/','/\(.*?\)/','/By\n/','/\.\.\.Less/'],"",$authorsElement->getText());
+         $article=[
+             'title'=>$titleElement->getText(),
+            // 'authors'=>str_replace("By: ",'',$element->findElement(WebdriverBy::cssSelector('div:nth-child(2)'))->getText()),
+             'journal'=> $journalElement->getText(),
+             'publishedDate'=>$bublishedElement->getText(),
+             'authors'=>preg_replace(['/([0-9])+(\/s,\/s[0-9]+)?/'],";",$autors)
+            
+         ];
+         
+         //close tab
+         dump($authorsElement->getText());
+         dump($article);
+         $this->driver->close();
     }
 
     public function grabCitations():array

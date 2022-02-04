@@ -113,7 +113,7 @@ class ArticleImporter implements ImporterInterface
         //get authors effective number
         $neff=ArticleHelper::calculateAuthorsEffNumber(substr_count($record['AU'],';')+1);
         $article->setEffectiveAuthorsNumber($neff);
-        $article->setAIS($this->getJournalAIS(trim($record['SO']),2019));
+        $article->setAIS($this->getJournalAIS(trim($record['SO']),2020));
         $nca=ArticleHelper::getTheNumberOfCorrespondingAuthors($record['RP']);
         $article->setTheNumberOfCorrespondingAuthors($nca);
 

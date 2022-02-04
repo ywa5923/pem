@@ -94,9 +94,6 @@ class WosWebScrapperCommand2 extends Command
             //Document Types: Book Chapters
           
 
-            If($wosScrapper->citationsFound!=0){
-
-            }
           
            
              
@@ -104,14 +101,14 @@ class WosWebScrapperCommand2 extends Command
             if($wosScrapper->citationsFound!=0 ){
 
                  //if none of the exclude type is presented, the scrapper have to select the included type and click Refine in order to have access to citations elements
-           $remainsOtherCitationTypes=$wosScrapper->excludeArticleTypes($excludeTypes,$includeTypes);
-           // $wosScrapper->refineArticleTypes( $includeTypes);
+                 $remainsOtherCitationTypes=$wosScrapper->excludeArticleTypes($excludeTypes,$includeTypes);
+                 // $wosScrapper->refineArticleTypes( $includeTypes);
 
 
-            if( $wosScrapper->allCitationsExcluded){
+                 if( $wosScrapper->allCitationsExcluded){
                 //found an article with all types  in the exclude array so continue
                 $io->writeln("----Found only citations in excluded types: ".$article->getTitle());
-            }
+                }
 
                 sleep(2);
 
@@ -122,8 +119,10 @@ class WosWebScrapperCommand2 extends Command
                     $citation->setTitle($c['title']);
                     $citation->setAuthors($c['authors']);
                     $citation->setJournal($c['journal']);
+                   
 
-                    if($publicationDate=\DateTime::createFromFormat('Y',$c['publishedDate'])){
+                    if($publicationDate=\DateTime::createFromFormat('Y',substr($c['publishedDate'],-4))){
+                       
                         $citation->setPublicationDate($publicationDate);
                     }
                     $citation->setArticle($article);
