@@ -71,10 +71,10 @@ class Article
 
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=555)
      * @Assert\NotBlank()
      * @Assert\Length(
-     *     max=255,
+     *     max=555,
      *     maxMessage="The maximum number of characters is {{limit}}"
      * )
      */

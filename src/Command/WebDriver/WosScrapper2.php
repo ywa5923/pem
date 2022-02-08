@@ -93,6 +93,8 @@ class WosScrapper2
             sleep(3);
             $this->io->writeln($pageTitle);
 
+           
+
 
         } catch (\Exception $ex) {
             $this->io->writeln($ex->getMessage());
@@ -530,12 +532,18 @@ class WosScrapper2
             //  $element=$this->driver->findElement(WebdriverBy::cssSelector("#DocumentType_raMore_tr > td > table > tbody > tr > td:nth-child(5)"));
 
             
+            $autors=preg_replace(['/\(.*?\)/','/By\n/','/\.\.\.Less/'],"",$authorsElement->getText());
             $article=[
                 'title'=>$titleElement->getText(),
+               // 'authors'=>str_replace("By: ",'',$element->findElement(WebdriverBy::cssSelector('div:nth-child(2)'))->getText()),
                 'journal'=> $journalElement->getText(),
                 'publishedDate'=>$bublishedElement->getText(),
-                'authors'=>preg_replace(['/\[.*?\]/','/\(.*?\)/','/By\n/','/\.\.\.Less/'],"",$authorsElement->getText())
+                'authors'=>preg_replace(['/([0-9]+(\s,\s[0-9])*)/'],";",$autors)
+               
             ];
+
+            dump($authorsElement->getText());
+            dump($article);
            
             //close tab
             $this->driver->close();
@@ -544,7 +552,7 @@ class WosScrapper2
             //go to main window
             $this->driver->switchTo()->window($this->driver->getWindowHandles()[0]);
 
-            dump($article);
+           
             sleep(2);
 
 
@@ -580,18 +588,19 @@ class WosScrapper2
         // $journalElement=$this->driver->findElement(WebdriverBy::cssSelector("#snMainArticle > app-jcr-overlay > span > button"));;
          //  $element=$this->driver->findElement(WebdriverBy::cssSelector("#DocumentType_raMore_tr > td > table > tbody > tr > td:nth-child(5)"));
 
-         $autors=preg_replace(['/\[.*?\]/','/\(.*?\)/','/By\n/','/\.\.\.Less/'],"",$authorsElement->getText());
+         $autors=preg_replace(['/\(.*?\)/','/By\n/','/\.\.\.Less/'],"",$authorsElement->getText());
          $article=[
              'title'=>$titleElement->getText(),
             // 'authors'=>str_replace("By: ",'',$element->findElement(WebdriverBy::cssSelector('div:nth-child(2)'))->getText()),
              'journal'=> $journalElement->getText(),
              'publishedDate'=>$bublishedElement->getText(),
-             'authors'=>preg_replace(['/([0-9])+(\/s,\/s[0-9]+)?/'],";",$autors)
+             'authors'=>preg_replace(['/([0-9]+(\s,\s[0-9])?)/'],";",$autors)
             
          ];
          
          //close tab
          dump($authorsElement->getText());
+         dump("aaaaaaaaa");
          dump($article);
          $this->driver->close();
     }

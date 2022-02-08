@@ -69,7 +69,6 @@ class WosWebScrapperCommand2 extends Command
         foreach($articles as $article)
         {
             if(!empty($article->getDoi())){
-                $io->writeln($article->getTitle()."=> by doi");
                 $wosScrapper->selectArticle(['searchString'=>$article->getDoi(),'identificator'=>'doi']);
                
             }else{
