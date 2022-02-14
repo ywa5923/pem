@@ -62,7 +62,7 @@ class PDFService
 
         $pdf->Image($logo, 10, 4, 74, 18, 'PNG');
         $pdf->SetXY(20, 32);
-        $pdf->Cell(0, 0, "Evaluare profesionala 2021", 0, false, 'C', 0, '', 0, false, 'M', 'M');
+        $pdf->Cell(0, 0, "Evaluare profesionala 2022", 0, false, 'C', 0, '', 0, false, 'M', 'M');
         $pdf->SetXY(20, 23);
         $pdf->writeHTML("<hr style='color:red'>", true, false, false, false, '');
 

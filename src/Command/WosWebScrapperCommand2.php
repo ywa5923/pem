@@ -33,7 +33,8 @@ class WosWebScrapperCommand2 extends Command
     public function execute(InputInterface $input,OutputInterface $output)
     {
 
-      $io = new SymfonyStyle($input,$output);
+        try{
+            $io = new SymfonyStyle($input,$output);
 
 
         $wosUrl = 'https://www.webofknowledge.com';
@@ -49,6 +50,8 @@ class WosWebScrapperCommand2 extends Command
             $io
         );
 
+     
+
         $wosScrapper->login();
        
         sleep(5);
@@ -62,7 +65,7 @@ class WosWebScrapperCommand2 extends Command
         ]);
 
       //grab all articles
-        $articles=$this->entityManager->getRepository(Article::class)->getYearIntervalArticles(2016,2020,$scrapperToken->getValue());
+        $articles=$this->entityManager->getRepository(Article::class)->getYearIntervalArticles(2017,2021,$scrapperToken->getValue());
 
         $io->progressStart(count($articles));
 
@@ -86,40 +89,29 @@ class WosWebScrapperCommand2 extends Command
             sleep(6);
             //$excludeTypes=["EDITORIAL MATERIAL","EARLY ACCESS","MEETING ABSTRACT","CORRECTION"];
             $excludeTypes=["Document Types: Meeting Abstract","Document Types: Early Access","Document Types: Editorial Materials","Document Types: Correction"];
-            $includeTypes=["Document Types: Review Articles","Document Types: Articles","Document Types: Proceedings Papers"];
-            //Document Types: Cited Reference,Document Types: Journal Paper,Document Types: Journal Article,Document Types: Review Articles
-            //Document Types: Research Support, Non-U.S. Gov't,Document Types: Editorial Materials,Document Types: Research Support, U.S. Gov't, Non-PHS
-            //Document Types: Research Article,Document Types: Comment,Document Types: Conference Paper,Document Types: Notes
-            //Document Types: Book Chapters
+            //if none of the exclude type is presented, the scrapper have to select the included type and click Refine in order to have access to citations elements
           
-
+            if($wosScrapper->citationsFound>0 ){
+                $wosScrapper->excludeArticleTypes($excludeTypes);
+            }  
           
-           
-             
+            if( $wosScrapper->allCitationsExcluded){
+           //found an article with all types  in the exclude array so continue
+           $io->writeln("----Found only citations in excluded types: ".$article->getTitle());
+           }
 
-            if($wosScrapper->citationsFound!=0 ){
+           sleep(2);
 
-                 //if none of the exclude type is presented, the scrapper have to select the included type and click Refine in order to have access to citations elements
-                 $remainsOtherCitationTypes=$wosScrapper->excludeArticleTypes($excludeTypes,$includeTypes);
-                 // $wosScrapper->refineArticleTypes( $includeTypes);
-
-
-                 if( $wosScrapper->allCitationsExcluded){
-                //found an article with all types  in the exclude array so continue
-                $io->writeln("----Found only citations in excluded types: ".$article->getTitle());
-                }
-
-                sleep(2);
+            if($wosScrapper->citationsFound>0 ){
 
                 //grab the citations and save them in database
-                $citations=$wosScrapper->getCitations($wosScrapper->citationsFound);
+                $citations=$wosScrapper->getCitations();
                 foreach($citations as $c){
                     $citation=new ArticleCitation();
                     $citation->setTitle($c['title']);
                     $citation->setAuthors($c['authors']);
                     $citation->setJournal($c['journal']);
                    
-
                     if($publicationDate=\DateTime::createFromFormat('Y',substr($c['publishedDate'],-4))){
                        
                         $citation->setPublicationDate($publicationDate);
@@ -140,7 +132,18 @@ class WosWebScrapperCommand2 extends Command
         }
 
         $io->progressFinish();
+
+        }catch(\Exception $e)
+        {
+           $wosScrapper->close();
+           $this->execute($input,$output);
+            
+        }
+
+      
     }
+
+    
 
 
 }

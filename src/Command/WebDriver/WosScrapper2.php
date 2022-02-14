@@ -64,6 +64,8 @@ class WosScrapper2
             $this->io->writeln($pageTitle);
 
             //click arrow to  signin
+
+            $this->acceptAll();
             
            $this->driver->findElement(  WebDriverBy::cssSelector('body > app-wos > div > div > header > app-header > div.container > div.white-bar.ng-star-inserted > div > div.flex-display-align-center.margin-right-15--reversible.ng-star-inserted > button.font-size-16.sign-in.ng-star-inserted > mat-icon > svg'))->click();
             sleep(5);
@@ -99,6 +101,15 @@ class WosScrapper2
         } catch (\Exception $ex) {
             $this->io->writeln($ex->getMessage());
         }
+    }
+
+    public function acceptAll()
+    {
+        //#onetrust-accept-btn-handler
+        $this->driver->wait()->until(
+            WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::cssSelector("#onetrust-accept-btn-handler"))
+        )->click();
+        sleep(2);
     }
 
     public function selectArticle(array $identificator)
@@ -172,11 +183,13 @@ class WosScrapper2
        //look for a tag and click it if it exists
         if($element1 =$this->elementExists( $aSelector)){
          $this->citationsFound=(int)$element1->getText();
+         $this->allCitationsExcluded=false;
            $element1->click();
            $this->io->writeln("citari gasite: ".$this->citationsFound);
 
         }else{
             $this->citationsFound=0;
+            $this->allCitationsExcluded=false;
         }
 
     }
@@ -238,7 +251,7 @@ class WosScrapper2
 
     }
 
-    public function  excludeArticleTypes($excludeTypes,$includeTypes)
+    public function  excludeArticleTypes($excludeTypes)
     {
 
         //scroll the page;
@@ -274,21 +287,19 @@ class WosScrapper2
 
             //click exclude
             $this->driver->findElement(WebdriverBy::cssSelector('#filter-section-DT > div > div > div > button.mat-focus-indicator.refine-button.uppercase-button.mat-stroked-button.mat-button-base.mat-primary.ng-star-inserted > span.mat-button-wrapper'))->click();
-        }elseif($found===0){
-            //refine
-            /*
-            //click all document types and then refine(this is needed in order to select the citation elements)
-            foreach ( $elements as $element) {
-                // $this->io->writeln($element->getAttribute('title'));
-                 if(\in_array($element->getAttribute('title'),$includeTypes)){
-                     $element->click();
-                 }
-                 
-             }
-             $this->driver->findElement(WebdriverBy::cssSelector('#filter-section-DT > div > div > div > button.mat-focus-indicator.refine-button.uppercase-button.mat-flat-button.mat-button-base.mat-primary.ng-star-inserted'))->click();
-
-        */
+             sleep(2);
+            $zeroCitedSelector=WebdriverBy::cssSelector('#GenericFD-search-searchInfo-parent');
+            if($zeroCitedElement=$this->elementExists( $zeroCitedSelector)) {
+               
+               if($zeroCitedElement->getText() ==="0 results cited:"){
+                $this->citationsFound=0;
+                $this->allCitationsExcluded=true;
+                
+               }
+               
             }
+       
+        }
     }
 
     public function testExcludeTypes($excludeTypes){
@@ -369,39 +380,14 @@ class WosScrapper2
 
     }
 
-    public function getCitations($citationNumber=null)
+    public function getCitations()
     {
         $articles=[];
 
-       // $this->driver->get('http://localhost/wos/citations100');
-        /*$documentTypeSelector=WebdriverBy::cssSelector('span.select2-selection__arrow');
-         if($citationNumber>10 && $this->elementExists($documentTypeSelector)) {
-             sleep(2);
-             $element = $this->driver->wait(3600,1000)->until(
-                 WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::cssSelector("span.select2-selection__arrow"))
-             );
-            // $this->driver->getMouse()->mouseMove( $element->getCoordinates() );
-             $this->driver->executeScript("arguments[0].scrollIntoView();",[$element]);
-         $element->click();
-
-         //click 50 select#selectPageSize_bottom
-             $select = new WebDriverSelect(
-                 $this->driver->findElement(WebdriverBy::cssSelector('select#selectPageSize_bottom'))
-             );
-            $select->selectByValue('50');
-
-      }
-        sleep(5);*/
-
-         //grab articles here
         $a=$this->grabCitations2();
         $articles=array_merge($articles,$a);
       
        
-       
-        
-       
-      //form.pagination button[aria-label="Bottom Next Page"]
       $nextBtn= $this->driver->findElement(WebdriverBy::cssSelector('form.pagination button[aria-label="Bottom Next Page"]'));
        while($nextBtn->getAttribute("disabled")!=="true"){
             sleep(3);
@@ -466,6 +452,23 @@ class WosScrapper2
     }
     
 
+    public function testZeroResultsCited()
+    {
+        //https://www.webofscience.com/wos/woscc/summary/49fa53f1-742a-40e2-90d5-c741fa166502-228d8e26/date-descending/1
+        $this->driver->get('https://www.webofscience.com/wos/woscc/summary/49fa53f1-742a-40e2-90d5-c741fa166502-228d8e26/date-descending/1');
+        sleep(3);
+         //click on More if it exists
+         //#SumAuthTa-FrToggle-author-en > button
+         $zeroCitedSelector=WebdriverBy::cssSelector('#GenericFD-search-searchInfo-parent');
+         if($zeroCitedElement=$this->elementExists( $zeroCitedSelector)) {
+            
+            if($zeroCitedElement->getText() ==="0 results cited:"){
+                dump("oky");
+            }
+            
+             sleep(2);
+         }
+    }
     
 
     public function grabCitations2():array
@@ -474,15 +477,8 @@ class WosScrapper2
         //more article:https://www.webofscience.com/wos/alldb/full-record/WOS:000427505300016
 
         $articles=[];
-
         sleep(2);
-        /*$titleElements = $this->driver->wait(3600,1000)->until(
-            WebDriverExpectedCondition::presenceOfAllElementsLocatedBy(WebDriverBy::cssSelector("body > app-wos > div > div > main > div > div.held > app-input-route > app-base-summary-component > div > div.results.ng-star-inserted > app-records-list > app-record:nth-child(7) > div.data-section.ng-star-inserted > div:nth-child(1) > app-summary-title > h3 > a"))
-        );*/
-        $titlesH3="body > app-wos > div > div > main > div > div.held > app-input-route > app-base-summary-component > div > div.results.ng-star-inserted > app-records-list > app-record:nth-child(7) > div.data-section.ng-star-inserted > div:nth-child(1) > app-summary-title > h3 > a";
         $articleEements=$this->driver->findElements(WebDriverBy::cssSelector("body > app-wos > div > div > main > div > div.held > app-input-route > app-base-summary-component > div > div.results.ng-star-inserted > app-records-list  app-record"));
-        
-       
         foreach($articleEements as $articleElement){
 
             $this->driver->executeScript("arguments[0].scrollIntoView();", [$articleElement]);
@@ -493,12 +489,7 @@ class WosScrapper2
                 WebDriverExpectedCondition::visibilityOf($articleElement)
             );
     
-
-
             $url="https://www.webofscience.com".$articleElement->findElement(WebDriverBy::cssSelector("a.title"))->getAttribute("href");
-
-            $this->io->writeln("urlul este ".$url);
-            $this->io->writeln("articlesElement:  ".count($articleEements));
             $this->driver->executeScript("window.open('about:blank','_blank');", array());
             $this->driver->switchTo()->window($this->driver->getWindowHandles()[1]);
             $this->driver->get($url);
@@ -528,10 +519,6 @@ class WosScrapper2
 
             $journalElement=($jrn=$this->elementExists($journalSelector1))?$jrn:($this->driver->findElement( $journalSelector2));
 
-           // $journalElement=$this->driver->findElement(WebdriverBy::cssSelector("#snMainArticle > app-jcr-overlay > span > button"));;
-            //  $element=$this->driver->findElement(WebdriverBy::cssSelector("#DocumentType_raMore_tr > td > table > tbody > tr > td:nth-child(5)"));
-
-            
             $autors=preg_replace(['/\(.*?\)/','/By\n/','/\.\.\.Less/'],"",$authorsElement->getText());
             $article=[
                 'title'=>$titleElement->getText(),
@@ -542,17 +529,12 @@ class WosScrapper2
                
             ];
 
-            dump($authorsElement->getText());
-            dump($article);
-           
             //close tab
             $this->driver->close();
             $articles[]=$article;
 
             //go to main window
             $this->driver->switchTo()->window($this->driver->getWindowHandles()[0]);
-
-           
             sleep(2);
 
 
@@ -678,6 +660,11 @@ class WosScrapper2
         catch(\Exception $e){
             return false;
         }
+    }
+
+    public function close()
+    {
+        $this->driver->close();
     }
 
 }

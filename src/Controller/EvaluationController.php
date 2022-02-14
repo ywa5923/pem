@@ -145,7 +145,7 @@ class EvaluationController extends AbstractController
             $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
             $mail->Username   = 'ivanion10@gmail.com';                     // SMTP username
-            $mail->Password   = 'Punctulrosu12';                               // SMTP password
+            $mail->Password   = '===';                               // SMTP password
              //$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
@@ -155,12 +155,12 @@ class EvaluationController extends AbstractController
              $mail->setFrom('ion.ivan@infim.ro', 'Ion Ivan');
              $mail->addAddress($to, $name);     // Add a recipient
 
-             $mail->addStringAttachment($pdf,$name."_evaluare2021.pdf");
+             $mail->addStringAttachment($pdf,$name."_evaluare2022.pdf");
            // $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
 
            // Content
            $mail->isHTML(true);                                  // Set email format to HTML
-           $mail->Subject = 'Evaluare profesionala finala 2021';
+           $mail->Subject = 'Evaluare profesionala finala 2022';
            $mail->Body    = $body;
            $mail->send();
            return "ok";
