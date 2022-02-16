@@ -20,6 +20,7 @@
                 <th  scope="col">Journal</th>
                 <th  scope="col">Published</th>
                 <th  scope="col">Authors no</th>
+                <th scope="col">CA</th>
                 <th  scope="col">Actions</th>
             </tr>
         </thead>
@@ -37,6 +38,7 @@
                          {{ authorsNumber }}
                     </span>
                    </td>
+                <td>{{article.theNumberOfCorrespondingAuthors}}</td>  
                 <td>
                     <a href="{{ path('article_show', {'id': article.id,article_type:article_type}) }}">
                         <i class="fas fa-eye"></i>

@@ -51,3 +51,7 @@ Observatii:
 
 
 https://www.webofscience.com/wos/woscc/summary/18ab12e0-3a51-428d-a705-0e67fe17f407-216e5826/date-descending/1
+
+
+//update article a set a.ais=(SELECT jf.ais FROM journal j inner join journal_factor jf on j.id=jf.journal_id where j.name=a.journal AND YEAR(jf.year)=2019) where a.type='scientific_paper' and YEAR(a.publication_date)=2019;
+
